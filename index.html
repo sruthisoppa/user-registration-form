@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Custom font for better aesthetics */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #f8faff; /* Very light blue/off-white for a clean feel */
+        }
+        
+        /* Custom styles for focus ring to match primary button color and stronger focus */
+        .focus-ring-blue-400:focus {
+            --tw-ring-color: #60a5fa; /* Tailwind blue-400 */
+            border-color: #60a5fa; /* Blue border on focus */
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.5); /* Subtle blue glow */
+        }
+
+        /* Style for error messages */
+        .error-message {
+            color: #ef4444; /* Tailwind red-500 */
+            font-size: 0.875rem; /* Tailwind text-sm */
+            margin-top: 0.25rem; /* Tailwind mt-1 */
+            display: none; /* Initially hidden */
+        }
+
+        /* Input field with error */
+        .input-error {
+            border-color: #ef4444 !important; /* Red border for error state */
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); /* Subtle red glow */
+        }
+
+        /* Password strength indicator styles */
+        .password-strength-bar {
+            height: 6px;
+            border-radius: 9999px; /* rounded-full */
+            width: 0%;
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        }
+        .strength-weak { background-color: #ef4444; } /* red-500 */
+        .strength-medium { background-color: #f59e0b; } /* yellow-500 */
+        .strength-strong { background-color: #10b981; } /* emerald-500 */
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-lg border border-gray-200">
+        <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">
+            Create Your Account
+        </h1>
+        <p class="text-center text-gray-600 mb-8 text-sm">Join our community by registering below.</p>
+        
+        <div id="registrationSuccessMessage" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 flex items-center gap-2" role="alert">
+            <i class="fas fa-check-circle text-green-500 text-xl"></i>
+            <strong class="font-bold">Success!</strong>
+            <span class="block sm:inline">Your account has been registered.</span>
+        </div>
+
+        <form id="registrationForm" action="https://getform.io/f/awnwymzb" method="POST" class="space-y-5" novalidate>
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                               focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                        required
+                        aria-describedby="username-error"
+                    />
+                </div>
+                <span id="username-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-envelope"></i>
+                    </span>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter email"
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                               focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                        required
+                        aria-describedby="email-error"
+                    />
+                </div>
+                <span id="email-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter password"
+                        class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                               focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                        required
+                        aria-describedby="password-error password-strength-text"
+                    />
+                    <span class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-400" id="togglePasswordVisibility">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div class="mt-2">
+                    <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    <p id="passwordStrengthText" class="text-xs text-gray-500 mt-1"></p>
+                </div>
+                <span id="password-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div>
+                <label for="confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-lock"></i>
+                    </span>
+                    <input
+                        type="password"
+                        id="confirm-password"
+                        name="confirm_password"
+                        placeholder="Confirm password"
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                               focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                        required
+                        aria-describedby="confirm-password-error"
+                    />
+                </div>
+                <span id="confirm-password-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div>
+                <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">Birthdate</label>
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-calendar-alt"></i>
+                    </span>
+                    <input
+                        type="date"
+                        id="birthdate"
+                        name="birthdate"
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm
+                               focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                        required
+                        aria-describedby="birthdate-error"
+                    />
+                </div>
+                <span id="birthdate-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div>
+                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Full Address</label>
+                <div class="relative">
+                    <span class="absolute top-3 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </span>
+                    <textarea
+                        id="address"
+                        name="address"
+                        rows="3"
+                        placeholder="Enter address"
+                        class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                               focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                        required
+                        aria-describedby="address-error"
+                    ></textarea>
+                </div>
+                <span id="address-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <div class="flex phone-input-group">
+                    <div class="relative w-1/4">
+                        <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                            +
+                        </span>
+                        <input
+                            type="tel"
+                            id="countryCode"
+                            name="countryCode"
+                            placeholder="Code"
+                            value="91" class="block w-full pl-7 pr-2 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                                   focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none text-center transition duration-150 ease-in-out"
+                            required
+                            aria-label="Country Code"
+                            aria-describedby="phone-error phone-help"
+                            maxlength="4"
+                        />
+                    </div>
+                    <div class="relative w-3/4">
+                        <input
+                            type="tel"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            placeholder="Enter phone number"
+                            pattern="[0-9]{10}" title="Phone number format: 10 digits"
+                            class="block w-full pl-4 pr-4 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400
+                                   focus:ring-blue-400 focus:border-blue-400 sm:text-base outline-none transition duration-150 ease-in-out"
+                            required
+                            aria-describedby="phone-error phone-help"
+                        />
+                    </div>
+                </div>
+                <span id="phone-error" class="error-message" aria-live="polite"></span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4 pt-4">
+                <button
+                    id="submitButton"
+                    type="submit"
+                    class="w-full sm:w-1/2 flex justify-center items-center gap-2 py-2.5 px-4 border border-transparent rounded-md shadow-sm text-lg font-medium text-white
+                           bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400
+                           transition duration-200 ease-in-out transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <svg id="spinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    <span id="submitText">Register</span>
+                </button>
+
+                <button
+                    type="reset"
+                    class="w-full sm:w-1/2 flex justify-center py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-lg font-medium text-gray-700
+                           bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400
+                           transition duration-200 ease-in-out transform hover:-translate-y-0.5"
+                >
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registrationSuccessMessage = document.getElementById('registrationSuccessMessage');
+            const form = document.getElementById('registrationForm');
+            const submitButton = document.getElementById('submitButton');
+            const spinner = document.getElementById('spinner');
+            const submitText = document.getElementById('submitText');
+
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+            const birthdateInput = document.getElementById('birthdate');
+            const addressInput = document.getElementById('address');
+            const countryCodeInput = document.getElementById('countryCode');
+            const phoneNumberInput = document.getElementById('phoneNumber');
+
+            const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+            const passwordStrengthText = document.getElementById('passwordStrengthText');
+            const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
+
+            // Helper function to display error messages and apply error styling
+            function displayError(inputElement, errorElementId, message) {
+                const errorElement = document.getElementById(errorElementId);
+                if (errorElement) {
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                    inputElement.classList.add('input-error'); // Add error border
+                    inputElement.setAttribute('aria-invalid', 'true'); // For accessibility
+                }
+            }
+
+            // Helper function to clear error messages and remove error styling
+            function clearError(inputElement, errorElementId) {
+                const errorElement = document.getElementById(errorElementId);
+                if (errorElement) {
+                    errorElement.textContent = '';
+                    errorElement.style.display = 'none';
+                    inputElement.classList.remove('input-error'); // Remove error border
+                    inputElement.removeAttribute('aria-invalid'); // For accessibility
+                }
+            }
+
+            // Validation functions
+            function validateUsername() {
+                const username = usernameInput.value.trim();
+                if (username === '') {
+                    displayError(usernameInput, 'username-error', 'Username is required.');
+                    return false;
+                } else if (username.length < 3) {
+                    displayError(usernameInput, 'username-error', 'Username must be at least 3 characters.');
+                    return false;
+                }
+                clearError(usernameInput, 'username-error');
+                return true;
+            }
+
+            function validateEmail() {
+                const email = emailInput.value.trim();
+                const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+                if (email === '') {
+                    displayError(emailInput, 'email-error', 'Email address is required.');
+                    return false;
+                } else if (!emailRegex.test(email)) {
+                    displayError(emailInput, 'email-error', 'Please enter a valid email address.');
+                    return false;
+                }
+                clearError(emailInput, 'email-error');
+                return true;
+            }
+
+            function validatePassword() {
+                const password = passwordInput.value;
+                let isValid = true;
+                let errorMessage = '';
+
+                if (password === '') {
+                    errorMessage = 'Password is required.';
+                    isValid = false;
+                } else if (password.length < 8) {
+                    errorMessage = 'Password must be at least 8 characters.';
+                    isValid = false;
+                } else if (!/[A-Z]/.test(password)) {
+                    errorMessage = 'Password must contain at least one uppercase letter.';
+                    isValid = false;
+                } else if (!/[a-z]/.test(password)) {
+                    errorMessage = 'Password must contain at least one lowercase letter.';
+                    isValid = false;
+                } else if (!/[0-9]/.test(password)) {
+                    errorMessage = 'Password must contain at least one number.';
+                    isValid = false;
+                } else if (!/[^A-Za-z0-9]/.test(password)) {
+                    errorMessage = 'Password must contain at least one special character.';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    displayError(passwordInput, 'password-error', errorMessage);
+                } else {
+                    clearError(passwordInput, 'password-error');
+                }
+                return isValid;
+            }
+
+            function validateConfirmPassword() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (confirmPassword === '') {
+                    displayError(confirmPasswordInput, 'confirm-password-error', 'Confirm password is required.');
+                    return false;
+                } else if (password !== confirmPassword) {
+                    displayError(confirmPasswordInput, 'confirm-password-error', 'Passwords do not match.');
+                    return false;
+                }
+                clearError(confirmPasswordInput, 'confirm-password-error');
+                return true;
+            }
+
+            function validateBirthdate() {
+                const birthdate = birthdateInput.value;
+                if (birthdate === '') {
+                    displayError(birthdateInput, 'birthdate-error', 'Birthdate is required.');
+                    return false;
+                }
+                const selectedDate = new Date(birthdate);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0); 
+                if (selectedDate > today) {
+                    displayError(birthdateInput, 'birthdate-error', 'Birthdate cannot be in the future.');
+                    return false;
+                }
+                clearError(birthdateInput, 'birthdate-error');
+                return true;
+            }
+
+            function validateAddress() {
+                const address = addressInput.value.trim();
+                if (address === '') {
+                    displayError(addressInput, 'address-error', 'Address is required.');
+                    return false;
+                }
+                clearError(addressInput, 'address-error');
+                return true;
+            }
+
+            function validatePhone() {
+                const countryCode = countryCodeInput.value.trim();
+                const phoneNumber = phoneNumberInput.value.trim();
+                
+                let isValid = true;
+
+                if (countryCode === '') {
+                    displayError(countryCodeInput, 'phone-error', 'Country code is required.');
+                    isValid = false;
+                } else if (!/^\d{1,4}$/.test(countryCode)) { // Allow 1 to 4 digits for country code
+                    displayError(countryCodeInput, 'phone-error', 'Invalid country code (1-4 digits).');
+                    isValid = false;
+                } else {
+                    clearError(countryCodeInput, 'phone-error'); // <--- This clears the error on the *countryCodeInput*
+                }
+
+                if (phoneNumber === '') {
+                    displayError(phoneNumberInput, 'phone-error', 'Phone number is required.');
+                    isValid = false;
+                } else if (!/^\d{7,15}$/.test(phoneNumber)) { // Common range for phone numbers (7 to 15 digits)
+                    displayError(phoneNumberInput, 'phone-error', 'Invalid phone number (7-15 digits).');
+                    isValid = false;
+                } else {
+                    clearError(phoneNumberInput, 'phone-error'); // <--- This clears the error on the *phoneNumberInput*
+                }
+
+                // If both are valid individually, clear the common error
+                if (isValid) {
+                    clearError(countryCodeInput, 'phone-error'); // Redundant if already cleared above, but safe
+                    clearError(phoneNumberInput, 'phone-error'); // Redundant if already cleared above, but safe
+                }
+                
+                return isValid;
+            }
+
+            // Password strength indicator logic
+            function updatePasswordStrength() {
+                const password = passwordInput.value;
+                let strength = 0;
+                let strengthText = 'Weak';
+                let barColorClass = 'strength-weak';
+
+                if (password.length >= 8) strength += 1;
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[a-z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+                let width = (strength / 5) * 100; // Max strength is 5
+                
+                if (strength <= 2) {
+                    strengthText = 'Weak';
+                    barColorClass = 'strength-weak';
+                } else if (strength <= 4) {
+                    strengthText = 'Medium';
+                    barColorClass = 'strength-medium';
+                } else {
+                    strengthText = 'Strong';
+                    barColorClass = 'strength-strong';
+                }
+
+                passwordStrengthBar.style.width = `${width}%`;
+                passwordStrengthBar.className = `password-strength-bar ${barColorClass}`;
+                passwordStrengthText.textContent = `Strength: ${strengthText}`;
+
+                if (password.length === 0) {
+                    passwordStrengthBar.style.width = '0%';
+                    passwordStrengthText.textContent = '';
+                }
+            }
+
+            // Attach event listeners for real-time validation and input feedback
+            // Using 'input' for immediate feedback and 'blur' for final validation when leaving field
+            usernameInput.addEventListener('input', validateUsername);
+            usernameInput.addEventListener('blur', validateUsername);
+
+            emailInput.addEventListener('input', validateEmail);
+            emailInput.addEventListener('blur', validateEmail);
+
+            passwordInput.addEventListener('input', () => {
+                validatePassword();
+                updatePasswordStrength();
+                validateConfirmPassword(); // Validate confirm password when main password changes
+            });
+            passwordInput.addEventListener('blur', () => {
+                validatePassword();
+                updatePasswordStrength();
+            });
+
+            confirmPasswordInput.addEventListener('input', validateConfirmPassword);
+            confirmPasswordInput.addEventListener('blur', validateConfirmPassword);
+
+            birthdateInput.addEventListener('input', validateBirthdate);
+            birthdateInput.addEventListener('blur', validateBirthdate);
+
+            addressInput.addEventListener('input', validateAddress);
+            addressInput.addEventListener('blur', validateAddress);
+
+            countryCodeInput.addEventListener('input', validatePhone);
+            countryCodeInput.addEventListener('blur', validatePhone);
+            phoneNumberInput.addEventListener('input', validatePhone);
+            phoneNumberInput.addEventListener('blur', validatePhone);
+
+            // Password visibility toggle
+            togglePasswordVisibility.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+
+
+            // Main form submission handler
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); 
+
+                registrationSuccessMessage.classList.add('hidden'); // Clear any previous success messages
+
+                // Run all validation functions
+                const isUsernameValid = validateUsername();
+                const isEmailValid = validateEmail();
+                const isPasswordValid = validatePassword();
+                const isConfirmPasswordValid = validateConfirmPassword(); 
+                const isBirthdateValid = validateBirthdate();
+                const isAddressValid = validateAddress();
+                const isPhoneValid = validatePhone();
+
+                // If any validation fails, stop here and show errors
+                // Note: The order of checking is important for which error appears first
+                if (!(isUsernameValid && isEmailValid && isPasswordValid && isConfirmPasswordValid && isBirthdateValid && isAddressValid && isPhoneValid)) {
+                    // Find the first input with an error and scroll to it, then focus it
+                    const firstInvalidInput = document.querySelector('.input-error');
+                    if (firstInvalidInput) {
+                        firstInvalidInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstInvalidInput.focus(); 
+                    }
+                    return; // Crucially, exit the submit handler if validation fails
+                }
+
+                // If all validations pass, proceed with submission
+                spinner.classList.remove('hidden');
+                submitText.textContent = "Submitting...";
+                submitButton.disabled = true; // Disable button to prevent multiple submissions
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        registrationSuccessMessage.classList.remove('hidden');
+                        form.reset(); // Clear form fields
+
+                        // Clear all errors and strength indicator on successful reset
+                        document.querySelectorAll('.error-message').forEach(error => {
+                            error.textContent = '';
+                            error.style.display = 'none';
+                        });
+                        document.querySelectorAll('input, textarea').forEach(input => {
+                            input.classList.remove('input-error');
+                            input.removeAttribute('aria-invalid');
+                        });
+                        passwordStrengthBar.style.width = '0%';
+                        passwordStrengthText.textContent = '';
+
+                        // Hide success message after 5 seconds and optionally redirect or clear form
+                        setTimeout(() => {
+                            registrationSuccessMessage.classList.add('hidden');
+                            // If you want to redirect after success, uncomment the line below
+                             window.location.href = 'https://getform.io/thank-you?id=awnwymzb'; 
+                        }, 5000); 
+
+                    } else {
+                        // Handle server-side errors if Getform.io provides them
+                        const data = await response.json();
+                        alert(data?.errors?.[0]?.message || "Submission failed. Please try again.");
+                    }
+                } catch (error) {
+                    console.error("Network error during form submission:", error);
+                    alert("Network error. Please try again.");
+                } finally {
+                    spinner.classList.add('hidden');
+                    submitText.textContent = "Register";
+                    submitButton.disabled = false; // Re-enable button
+                }
+            });
+
+            // Handle reset button to clear all errors and success message
+            form.addEventListener('reset', function() {
+                const errorMessages = document.querySelectorAll('.error-message');
+                errorMessages.forEach(error => {
+                    error.textContent = '';
+                    error.style.display = 'none';
+                });
+                const inputs = document.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    input.classList.remove('input-error');
+                    input.removeAttribute('aria-invalid');
+                });
+                registrationSuccessMessage.classList.add('hidden');
+                passwordStrengthBar.style.width = '0%';
+                passwordStrengthText.textContent = '';
+                // Reset password visibility icon to default (fa-eye)
+                const eyeIcon = togglePasswordVisibility.querySelector('i');
+                if (eyeIcon.classList.contains('fa-eye-slash')) {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

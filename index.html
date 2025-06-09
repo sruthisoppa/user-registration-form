@@ -61,6 +61,7 @@
         </div>
 
         <form id="registrationForm" action="https://getform.io/f/awnwymzb" method="POST" class="space-y-5" novalidate>
+            <input type="hidden" name="_redirect" value="https://getform.io/thank-you?id=awnwymzb">
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
                 <div class="relative">
@@ -568,11 +569,11 @@
                         passwordStrengthText.textContent = '';
 
                         // Hide success message after 5 seconds and optionally redirect or clear form
-                        setTimeout(() => {
-                            registrationSuccessMessage.classList.add('hidden');
+                       // setTimeout(() => {
+                         //   registrationSuccessMessage.classList.add('hidden');
                             // If you want to redirect after success, uncomment the line below
-                             window.location.href = 'https://getform.io/thank-you?id=awnwymzb'; 
-                        }, 5000); 
+                           //  window.location.href = 'https://getform.io/thank-you?id=awnwymzb'; 
+                        //}, 5000); 
 
                     } else {
                         // Handle server-side errors if Getform.io provides them
